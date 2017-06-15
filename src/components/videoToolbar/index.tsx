@@ -1,13 +1,7 @@
 import React, {Component} from 'react';
+
 import propTypes from './propTypes';
-
-interface Props {
-  readonly isPlaying: boolean;
-  pause(): void;
-  play(): void;
-}
-
-interface State {}
+import {Props, State} from './typings';
 
 class VideoToolbar extends Component<Props, State> {
 
@@ -22,7 +16,7 @@ class VideoToolbar extends Component<Props, State> {
           }
           return <button onClick={this.props.play}>Record</button>;
         })()}
-        <button>Take Screen Shot</button>
+        <button onClick={this.props.takeScreenShot}>Take Screen Shot</button>
       </div>
     );
   }

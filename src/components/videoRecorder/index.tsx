@@ -1,21 +1,9 @@
 import React, {Component} from 'react';
 
 import propTypes from './propTypes';
+import Video from '../video';
 import VideoToolbar from '../videoToolbar';
-
-interface Constraints {
-  audio?: boolean;
-  video?: boolean;
-}
-
-interface Props {
-  readonly constraints?: Constraints;
-}
-
-interface State {
-  enabled: boolean,
-  playing: boolean
-}
+import {Constraints, Props, State} from './typings';
 
 class VideoRecorder extends Component<Props, State> {
 
@@ -28,15 +16,16 @@ class VideoRecorder extends Component<Props, State> {
     }
   };
 
-  private video: HTMLVideoElement;
-  private streamUrl: string;
+  private video: Video;
 
   state = {
     enabled: false,
-    playing: false
+    recording: false,
+    screenShots: [],
+    streamUrl: null
   };
 
-  private setVideo = (video: HTMLVideoElement) => {
+  private setVideo = (video: Video) => {
     this.video = video;
   }
 
@@ -47,44 +36,40 @@ class VideoRecorder extends Component<Props, State> {
   componentWillMount() {
     if (this.canRecordVideo()) {
       navigator.mediaDevices.getUserMedia(this.props.constraints).then((stream) => {
-        this.streamUrl = URL.createObjectURL(stream);
-
         this.setState({
-          enabled: true
+          enabled: true,
+          streamUrl: URL.createObjectURL(stream)
         });
       });
     }
   }
 
-  get currentTime(): number {
-    return this.video ? this.video.currentTime : NaN;
-  }
-
-  get ended(): boolean {
-    return this.video ? this.video.ended : false;
-  }
-
-  get paused(): boolean {
-    return this.video ? this.video.paused : false;
-  }
-
-  isPlaying(): boolean {
-    return this.currentTime > 0 && !this.paused && !this.ended;
-  }
-
-  play = () => {
-    this.video.play();
-
+  onPlay = () => {
     this.setState({
-      playing: this.isPlaying()
+      recording: true
+    });
+  }
+
+  onPause = () => {
+    this.setState({
+      recording: false
     });
   }
 
   pause = () => {
     this.video.pause();
+  }
 
+  play = () => {
+    this.video.play();
+  }
+
+  takeScreenShot = () => {
     this.setState({
-      playing: this.isPlaying()
+      screenShots: [
+        ...this.state.screenShots,
+        this.video.takeScreenShot()
+      ]
     });
   }
 
@@ -95,8 +80,21 @@ class VideoRecorder extends Component<Props, State> {
 
     return (
       <div>
-        <video ref={this.setVideo} src={this.streamUrl} />
-        <VideoToolbar play={this.play} pause={this.pause} isPlaying={this.state.playing} />
+        <Video
+          onPause={this.onPause}
+          onPlay={this.onPlay}
+          ref={this.setVideo}
+          src={this.state.streamUrl} />
+
+        <VideoToolbar
+          play={this.play}
+          pause={this.pause}
+          takeScreenShot={this.takeScreenShot}
+          isPlaying={this.state.recording} />
+
+          {this.state.screenShots.map((screenShot, index) => {
+            return <img key={index} src={screenShot} />;
+          })}
       </div>
     );
   }
