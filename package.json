@@ -1,0 +1,26 @@
+{
+  "name": "videoRecorder",
+  "version": "1.0.0-beta",
+  "description": "HTML5 video recorder",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "rollup --config rollup.config.dev.js -w"
+  },
+  "dependencies": {
+    "jsx": "^0.9.89",
+    "react": "^15.6.0",
+    "react-dom": "^15.6.0"
+  },
+  "devDependencies": {
+    "@types/react": "^15.0.28",
+    "connect": "^3.6.2",
+    "rollup": "^0.43.0",
+    "rollup-plugin-commonjs": "^8.0.2",
+    "rollup-plugin-node-resolve": "^3.0.0",
+    "rollup-plugin-replace": "^1.1.1",
+    "rollup-plugin-typescript": "^0.8.1",
+    "rollup-watch": "^4.0.0",
+    "serve-static": "^1.12.3"
+  }
+}
