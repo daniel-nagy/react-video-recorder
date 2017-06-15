@@ -2,6 +2,7 @@ import {PropTypes} from 'react';
 
 export default {
   autoplay: PropTypes.oneOf(['', 'autoplay']),
+  controls: PropTypes.oneOf(['', 'controls']),
   crossorigin: PropTypes.oneOf(['anonymous', 'use-credentials']),
   height: PropTypes.number,
   loop: PropTypes.oneOf(['', 'loop']),

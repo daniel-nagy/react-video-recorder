@@ -1,5 +1,6 @@
 export interface Props {
   readonly autoplay?: '' | 'autoplay';
+  readonly controls?: '' | 'controls';
   readonly crossorigin?: 'anonymous' | 'use-credentials';
   readonly height?: number;
   readonly loop?: '' | 'loop';
