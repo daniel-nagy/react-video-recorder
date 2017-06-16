@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import Promise from 'es6-promise';
 
 import propTypes from './propTypes';
 import Video from '../video';
@@ -34,14 +35,31 @@ class VideoRecorder extends Component<Props, State> {
   }
 
   componentWillMount() {
-    if (this.canRecordVideo()) {
-      navigator.mediaDevices.getUserMedia(this.props.constraints).then((stream) => {
-        this.setState({
-          enabled: true,
-          streamUrl: URL.createObjectURL(stream)
-        });
+    this.getUserMedia(this.props.constraints).then((stream) => {
+      this.setState({
+        enabled: true,
+        streamUrl: URL.createObjectURL(stream)
       });
+    });
+  }
+
+  getUserMedia(constraints: Constraints): Promise<MediaStream> {
+    if (navigator.mediaDevices) {
+      return navigator.mediaDevices.getUserMedia(constraints);
     }
+
+    // attempt to access the camera in older browsers
+    return new Promise((resolve, reject) => {
+      const getUserMedia = navigator.getUserMedia ||
+                           navigator.webkitGetUserMedia ||
+                           navigator.mozGetUserMedia;
+      
+      if (getUserMedia) {
+        return getUserMedia(constraints, resolve, reject);
+      }
+
+      return reject('cannot access device camera');
+    });
   }
 
   onPlay = () => {
@@ -75,7 +93,7 @@ class VideoRecorder extends Component<Props, State> {
 
   render() {
     if (!this.state.enabled) {
-      return null;
+      return <input type="file" accept="video/*;capture=camcorder" />;
     }
 
     return (

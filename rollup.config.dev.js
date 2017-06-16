@@ -26,7 +26,8 @@ const vendorBundle = {
       include: 'node_modules/**',
       namedExports: {
         'node_modules/react/react.js': ['Component', 'PropTypes']
-      }
+      },
+      sourceMap: false
     }),
 
     replace({
@@ -45,6 +46,7 @@ const appBundle = {
   entry: 'src/index.tsx',
 
   external: [
+    'es6-promise',
     'react',
     'react-dom'
   ],
@@ -52,6 +54,7 @@ const appBundle = {
   format: 'iife',
 
   globals: {
+    'es6-promise': 'vendor.Promise',
     'react': 'vendor.React',
     'react-dom': 'vendor.ReactDom'
   },

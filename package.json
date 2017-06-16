@@ -8,6 +8,7 @@
     "start": "rollup --config rollup.config.dev.js -w"
   },
   "dependencies": {
+    "es6-promise": "^4.1.0",
     "jsx": "^0.9.89",
     "react": "^15.6.0",
     "react-dom": "^15.6.0"

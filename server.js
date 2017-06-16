@@ -2,6 +2,7 @@ const connect = require('connect');
 const path = require('path');
 const serveStatic = require('serve-static');
 
+const HOST = '0.0.0.0';
 const PORT = process.env.PORT || 3000;
 
 const app = connect();
@@ -17,7 +18,7 @@ app.use((req, res, next) => {
 
 app.use(servePublic);
 
-const server = app.listen(PORT, (error) => {
+const server = app.listen(PORT, HOST, (error) => {
   if (error) {
     return console.log('server failed to start', error);
   }
