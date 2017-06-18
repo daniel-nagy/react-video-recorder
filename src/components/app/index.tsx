@@ -2,12 +2,14 @@ import React, {Component} from 'react';
 
 import VideoRecorder from '../videoRecorder';
 
-interface Props {}
-interface State {}
+class App extends Component<React.HTMLProps<HTMLElement>, any> {
 
-class App extends Component<Props, State> {
-  render() {
-    return <VideoRecorder />;
+  static style = {
+    display: 'flex'
+  };
+
+  render(): JSX.Element {
+    return <VideoRecorder style={App.style} />;
   }
 }
 

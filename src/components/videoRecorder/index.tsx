@@ -96,8 +96,10 @@ class VideoRecorder extends Component<Props, State> {
   }
 
   render(): JSX.Element {
+    const {constraints, ...props} = this.props;
+
     return (
-      <div>
+      <div {...props}>
         {this.renderVideo()}
         {this.renderVideoToolbar()}
 

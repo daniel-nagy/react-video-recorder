@@ -67,7 +67,7 @@ const appBundle = {
     }),
 
     typescript({
-      typescript: require('typescript/lib/typescript.js')
+      typescript: require('typescript')
     }),
 
     livereload()

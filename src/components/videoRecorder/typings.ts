@@ -3,7 +3,7 @@ export interface Constraints {
   video?: boolean;
 }
 
-export interface Props {
+export interface Props extends React.HTMLProps<HTMLElement> {
   readonly constraints?: Constraints;
 }
 
