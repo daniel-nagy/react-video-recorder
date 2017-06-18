@@ -47,6 +47,7 @@ const appBundle = {
 
   external: [
     'es6-promise',
+    'prop-types',
     'react',
     'react-dom'
   ],
@@ -55,6 +56,7 @@ const appBundle = {
 
   globals: {
     'es6-promise': 'vendor.Promise',
+    'prop-types': 'vendor.PropTypes',
     'react': 'vendor.React',
     'react-dom': 'vendor.ReactDom'
   },

@@ -1,12 +1,12 @@
-import {PropTypes} from 'react';
+import PropTypes from 'prop-types';
 
 export default {
-  autoplay: PropTypes.oneOf(['', 'autoplay']),
-  controls: PropTypes.oneOf(['', 'controls']),
+  autoplay: PropTypes.bool,
+  controls: PropTypes.bool,
   crossorigin: PropTypes.oneOf(['anonymous', 'use-credentials']),
   height: PropTypes.number,
-  loop: PropTypes.oneOf(['', 'loop']),
-  muted: PropTypes.oneOf(['', 'muted']),
+  loop: PropTypes.bool,
+  muted: PropTypes.bool,
   onPause: PropTypes.func,
   onPlay: PropTypes.func,
   preload: PropTypes.oneOf(['', 'auto', 'metadata', 'none']),

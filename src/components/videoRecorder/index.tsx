@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import Promise from 'es6-promise';
+import {Promise} from 'es6-promise';
 
 import propTypes from './propTypes';
 import Video from '../video';
@@ -30,17 +30,11 @@ class VideoRecorder extends Component<Props, State> {
     this.video = video;
   }
 
-  canRecordVideo() {
-    return Boolean(navigator.mediaDevices);
-  }
+  canRecordVideo(): boolean {
+    const {mediaDevices} = navigator;
+    const {getUserMedia, webkitGetUserMedia, mozGetUserMedia} = navigator;
 
-  componentWillMount() {
-    this.getUserMedia(this.props.constraints).then((stream) => {
-      this.setState({
-        enabled: true,
-        streamUrl: URL.createObjectURL(stream)
-      });
-    });
+    return mediaDevices || getUserMedia || webkitGetUserMedia || mozGetUserMedia;
   }
 
   getUserMedia(constraints: Constraints): Promise<MediaStream> {
@@ -91,30 +85,53 @@ class VideoRecorder extends Component<Props, State> {
     });
   }
 
-  render() {
-    if (!this.state.enabled) {
-      return <input type="file" accept="video/*;capture=camcorder" />;
-    }
+  record = () => {
+    this.getUserMedia(this.props.constraints).then((stream) => {
+      this.setState({
+        enabled: true,
+        recording: true,
+        streamUrl: URL.createObjectURL(stream)
+      }, this.play);
+    });
+  }
 
+  render(): JSX.Element {
     return (
       <div>
-        <Video
-          onPause={this.onPause}
-          onPlay={this.onPlay}
-          ref={this.setVideo}
-          src={this.state.streamUrl} />
+        {this.renderVideo()}
+        {this.renderVideoToolbar()}
 
-        <VideoToolbar
-          play={this.play}
-          pause={this.pause}
-          takeScreenShot={this.takeScreenShot}
-          isPlaying={this.state.recording} />
+        <input type="file" accept="video/*; capture=camcorder" />
 
-          {this.state.screenShots.map((screenShot, index) => {
-            return <img key={index} src={screenShot} />;
-          })}
+        {this.state.screenShots.map((screenShot, index) => {
+          return <img key={index} src={screenShot} />;
+        })}
       </div>
     );
+  }
+
+  renderVideo(): JSX.Element  {
+    if (!this.state.enabled) {
+      return null;
+    }
+
+    return <Video
+      onPause={this.onPause}
+      onPlay={this.onPlay}
+      ref={this.setVideo}
+      src={this.state.streamUrl} />;
+  }
+
+  renderVideoToolbar(): JSX.Element {
+    if (!this.canRecordVideo()) {
+      return null;
+    }
+
+    return <VideoToolbar
+      record={this.record}
+      pause={this.pause}
+      takeScreenShot={this.takeScreenShot}
+      isPlaying={this.state.recording} />;
   }
 }
 

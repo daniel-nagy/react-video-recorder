@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
 
 import propTypes from './propTypes';
-import {Props, State} from './typings';
+import {HTMLVideoElementProps, State} from './typings';
 
-export default class Video extends Component<Props, State> {
+export default class Video extends Component<HTMLVideoElementProps, State> {
   static propTypes = propTypes;
   static defaultProps = {};
 
@@ -32,7 +32,7 @@ export default class Video extends Component<Props, State> {
     return canvas.toDataURL('image/png');
   }
 
-  render() {
+  render(): JSX.Element {
     return <video {...this.props} ref={video => this.video = video} />;
   }
 }

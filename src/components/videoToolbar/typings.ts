@@ -1,7 +1,7 @@
 export interface Props {
-  readonly isPlaying: boolean;
   pause(): void;
-  play(): void;
+  readonly isPlaying: boolean;
+  record(): void;
   takeScreenShot(): void;
 }
 
