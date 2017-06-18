@@ -96,14 +96,14 @@ class VideoRecorder extends Component<Props, State> {
   }
 
   render(): JSX.Element {
-    const {constraints, ...props} = this.props;
-
     return (
-      <div {...props}>
+      <div style={{display: 'flex', flexDirection: 'column'}}>
         {this.renderVideo()}
-        {this.renderVideoToolbar()}
 
-        <input type="file" accept="video/*; capture=camcorder" />
+        <div style={{alignItems: 'center', display: 'flex', flex: '0 0 auto'}}>
+          {this.renderVideoToolbar()}
+          <input type="file" accept="video/*; capture=camcorder" />
+        </div>
 
         {this.state.screenShots.map((screenShot, index) => {
           return <img key={index} src={screenShot} />;

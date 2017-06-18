@@ -12,11 +12,13 @@ class VideoToolbar extends Component<Props, State> {
       <div className="video-toolbar">
         {(() => {
           if (this.props.isPlaying) {
-            return <button onClick={this.props.pause}>Stop Recording</button>
+            return [
+              <button key="0" onClick={this.props.pause}>Stop Recording</button>,
+              <button key="1" onClick={this.props.takeScreenShot}>Take Screen Shot</button>
+            ];
           }
-          return <button onClick={this.props.record}>Record</button>;
+          return <button onClick={this.props.record}>Record Video</button>;
         })()}
-        <button onClick={this.props.takeScreenShot}>Take Screen Shot</button>
       </div>
     );
   }
