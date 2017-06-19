@@ -4,5 +4,6 @@ export default {
   constraints: PropTypes.shape({
     audio: PropTypes.bool,
     video: PropTypes.bool
-  })
+  }),
+  onStopRecording: PropTypes.func
 }

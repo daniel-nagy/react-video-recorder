@@ -2,9 +2,16 @@ import React, {Component} from 'react';
 import {Promise} from 'es6-promise';
 
 import propTypes from './propTypes';
-import Video from '../video';
 import VideoToolbar from '../videoToolbar';
-import {Constraints, Props, State} from './typings';
+import {Constraints, MediaRecorder, Props, State} from './typings';
+
+const MediaRecorderState = {
+  INACTIVE: 'inactive',
+  PAUSED: 'paused',
+  RECORDING: 'recording'
+};
+
+const noop = () => {};
 
 class VideoRecorder extends Component<Props, State> {
 
@@ -14,10 +21,12 @@ class VideoRecorder extends Component<Props, State> {
     constraints: {
       audio: false,
       video: true
-    }
+    },
+    onStopRecording: noop
   };
 
-  private video: Video;
+  private mediaRecorder: MediaRecorder;
+  private video: HTMLVideoElement;
 
   state = {
     enabled: false,
@@ -26,7 +35,7 @@ class VideoRecorder extends Component<Props, State> {
     streamUrl: null
   };
 
-  private setVideo = (video: Video) => {
+  private setVideo = (video: HTMLVideoElement) => {
     this.video = video;
   }
 
@@ -70,23 +79,44 @@ class VideoRecorder extends Component<Props, State> {
 
   pause = () => {
     this.video.pause();
+    this.mediaRecorder.stop();
   }
 
   play = () => {
+    if (this.mediaRecorder.state === MediaRecorderState.PAUSED) {
+      this.mediaRecorder.resume();
+    } else if (this.mediaRecorder.state === MediaRecorderState.INACTIVE) {
+      this.mediaRecorder.start();
+    }
+
     this.video.play();
   }
 
   takeScreenShot = () => {
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d');
+
+    const {videoHeight: height, videoWidth: width} = this.video;
+
+    canvas.height = height;
+    canvas.width = width;
+    
+    context.fillRect(0, 0, width, height);
+    context.drawImage(this.video, 0, 0, width, height);
+
     this.setState({
       screenShots: [
         ...this.state.screenShots,
-        this.video.takeScreenShot()
+        canvas.toDataURL('image/png')
       ]
     });
   }
 
   record = () => {
     this.getUserMedia(this.props.constraints).then((stream) => {
+      this.mediaRecorder = new MediaRecorder(stream);
+      this.mediaRecorder.addEventListener('dataavailable', this.props.onStopRecording);
+
       this.setState({
         enabled: true,
         recording: true,
@@ -117,7 +147,7 @@ class VideoRecorder extends Component<Props, State> {
       return null;
     }
 
-    return <Video
+    return <video
       onPause={this.onPause}
       onPlay={this.onPlay}
       ref={this.setVideo}

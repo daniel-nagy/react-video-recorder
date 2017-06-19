@@ -17,6 +17,7 @@
   },
   "devDependencies": {
     "@types/react": "^15.0.28",
+    "body-parser": "^1.17.2",
     "connect": "^3.6.2",
     "rollup": "^0.43.0",
     "rollup-plugin-commonjs": "^8.0.2",
