@@ -77,6 +77,12 @@ class VideoRecorder extends Component<Props, State> {
     });
   }
 
+  onVideoInput = (event) => {
+    const element = event.currentTarget;
+
+    this.props.onStopRecording({data: element.files.item(0)});
+  }
+
   pause = () => {
     this.video.pause();
     this.mediaRecorder.stop();
@@ -132,7 +138,7 @@ class VideoRecorder extends Component<Props, State> {
 
         <div style={{alignItems: 'center', display: 'flex', flex: '0 0 auto'}}>
           {this.renderVideoToolbar()}
-          <input type="file" accept="video/*; capture=camcorder" />
+          <input type="file" accept="video/*" capture={true} onChange={this.onVideoInput} />
         </div>
 
         {this.state.screenShots.map((screenShot, index) => {

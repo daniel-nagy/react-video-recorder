@@ -4,16 +4,28 @@ const fs = require('fs');
 const path = require('path');
 const serveStatic = require('serve-static');
 
+const DEVELOPMENT = 'development';
 const HOST = '0.0.0.0';
 const PORT = process.env.PORT || 3000;
 
 const app = connect();
 const servePublic = serveStatic(path.join(__dirname, 'public'));
 
-app.use(bodyParser.raw({type: 'video/*'}));
+if (process.env.NODE_ENV === DEVELOPMENT) {
+  // allow CORS
+  app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE');
+    res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    
+    next();
+  });
+}
+
+app.use('/video', bodyParser.raw({type: 'video/*', limit: '10mb'}));
 
 app.use('/video', (req, res, next) => {
-  fs.writeFile('videos/test.webm', req.body, function(error) {
+  fs.writeFile('videos/test.webm', req.body, function (error) {
     if (error) {
       console.log(error);
       res.statusCode = 500;
