@@ -1,15 +1,17 @@
-import React, {Component} from 'react';
+import React, {Component, CSSProperties} from 'react';
 import {Promise} from 'es6-promise';
 
 import propTypes from './propTypes';
 import VideoToolbar from '../videoToolbar';
-import {Constraints, MediaRecorder, Props, State} from './typings';
+import {MediaRecorder, Props, State} from './typings';
 
 const MediaRecorderState = {
   INACTIVE: 'inactive',
   PAUSED: 'paused',
   RECORDING: 'recording'
 };
+
+const MOBILE = /android|iPad|iPod|iPhone/.test(navigator.userAgent);
 
 const noop = () => {};
 
@@ -49,7 +51,7 @@ class VideoRecorder extends Component<Props, State> {
     return mediaDevices || getUserMedia || webkitGetUserMedia || mozGetUserMedia;
   }
 
-  getUserMedia(constraints: Constraints): Promise<MediaStream> {
+  getUserMedia(constraints: MediaStreamConstraints): Promise<MediaStream> {
     if (navigator.mediaDevices) {
       return navigator.mediaDevices.getUserMedia(constraints);
     }
@@ -80,10 +82,8 @@ class VideoRecorder extends Component<Props, State> {
     });
   }
 
-  onVideoInput = (event) => {
-    const element = event.currentTarget;
-
-    this.props.onStopRecording({data: element.files.item(0)});
+  onVideoInput = ({currentTarget: {files}}) => {
+    this.props.onStopRecording({data: files.item(0)});
   }
 
   pause = () => {
@@ -141,7 +141,7 @@ class VideoRecorder extends Component<Props, State> {
 
         <div style={{alignItems: 'center', display: 'flex', flex: '0 0 auto'}}>
           {this.renderVideoToolbar()}
-          <input type="file" accept="video/*" capture={true} onChange={this.onVideoInput} />
+          {this.renderUploadBotton()}
         </div>
 
         {this.state.screenShots.map((screenShot, index) => {
@@ -149,6 +149,43 @@ class VideoRecorder extends Component<Props, State> {
         })}
       </div>
     );
+  }
+
+  renderUploadBotton() {
+    if (!MOBILE) {
+      return <input type="file" accept="video/*" capture={true} onChange={this.onVideoInput} />;
+    }
+
+    const buttonStyle: CSSProperties = {
+      overflow: 'hidden',
+      position: 'relative'
+    };
+
+    const inputStyle: CSSProperties = {
+      bottom: 0,
+      left: 0,
+      opacity: 0,
+      position: 'absolute',
+      right: 0,
+      top: 0
+    };
+
+    return [
+      <button key={0} style={buttonStyle}>
+        <span>Record Video</span>
+        <input
+          accept="video/*"
+          capture={true}
+          onChange={this.onVideoInput}
+          style={inputStyle}
+          type="file" />
+      </button>,
+      <input
+        accept="video/*"
+        key={1}
+        onChange={this.onVideoInput}
+        type="file" />
+    ];
   }
 
   renderVideo(): JSX.Element  {

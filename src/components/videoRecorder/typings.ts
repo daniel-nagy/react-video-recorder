@@ -5,17 +5,13 @@ declare class MediaRecorder {
   resume();
   start();
   stop();
+  addEventListener(type: string, listener: EventListenerOrEventListenerObject, useCapture?: boolean): void;
 };
 
 export {MediaRecorder};
 
-export interface Constraints {
-  audio?: boolean | object;
-  video?: boolean | object;
-}
-
 export interface Props extends React.HTMLProps<HTMLElement> {
-  readonly constraints?: Constraints;
+  readonly constraints?: MediaStreamConstraints;
   onStopRecording?(event): void;
 }
 
