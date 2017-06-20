@@ -19,8 +19,11 @@ class VideoRecorder extends Component<Props, State> {
 
   static defaultProps = {
     constraints: {
-      audio: false,
-      video: true
+      audio: true,
+      video: {
+        height: 720,
+        width: 1280
+      }
     },
     onStopRecording: noop
   };
@@ -154,6 +157,7 @@ class VideoRecorder extends Component<Props, State> {
     }
 
     return <video
+      muted={true}
       onPause={this.onPause}
       onPlay={this.onPlay}
       ref={this.setVideo}

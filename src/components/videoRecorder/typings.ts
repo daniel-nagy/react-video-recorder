@@ -10,8 +10,8 @@ declare class MediaRecorder {
 export {MediaRecorder};
 
 export interface Constraints {
-  audio?: boolean;
-  video?: boolean;
+  audio?: boolean | object;
+  video?: boolean | object;
 }
 
 export interface Props extends React.HTMLProps<HTMLElement> {
